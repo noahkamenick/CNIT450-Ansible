@@ -1,0 +1,145 @@
+---
+- name: Configure router transit interfaces
+  hosts: R1:R2
+  gather_facts: false
+  
+
+  tasks:
+    - name: enable ipv6 unicast routing
+      cisco.ios.ios_config:
+        lines: ipv6 unicast-routing
+
+    - name: check for ipv6 unicast routing
+      cisco.ios.ios_command:
+        commands:
+          - show run
+        wait_for:
+          - result[0] contains ipv6 unicast-routing
+
+    - name: Configure interface desc and no shut on R1
+      cisco.ios.ios_interfaces:
+        config:
+          - name: "{{ inside_int }}"
+            description: "{{ inside_int_desc }}"
+            enabled: true
+          - name: "{{ out_int }}"
+            description: "{{ out_int_desc }}"
+            enabled: true
+        state: merged
+    
+    - name: Configure ipv4/v6 int addressing
+      cisco.ios.ios_l3_interfaces:
+        config:
+          - name: "{{ inside_int }}"
+            ipv4:
+              - address: "{{ inside_int_ipv4_add }}"
+            ipv6:
+              - address: "{{ inside_int_ipv6_add }}"
+          - name: "{{ out_int }}"
+            ipv4:
+              - address: "{{ out_int_ipv4_add }}"
+            ipv6:
+              - address: "{{ out_int_ipv6_add }}"
+
+- name: Configure EIGRP on R1
+  hosts: R1
+  tasks:
+  - name: Configure R1 EIGRP
+    cisco.ios.ios_config:
+      parents: router eigrp asia
+      lines:
+      - address-family ipv4 unicast autonomous-system {{ eigrp_asn }}
+      - topology base
+      - redistribute bgp {{ eigrp_asn }} metric 100 1 255 1 1500
+      - exit-af-topology
+      - network 0.0.0.0
+      - eigrp router-id {{ eigrp_router_id }}
+      - exit-address-family
+      - address-family ipv6 unicast autonomous-system {{ eigrp_asn }}
+      - af-interface {{ af_interface_id }}
+      - topology base
+      - exit-af-topology
+      - eigrp router-id {{ eigrp_router_id }}
+      - exit-address-family
+
+- name: Configure EIGRP on R2
+  hosts: R2
+  tasks: 
+  - name: Conigure R2 EIGRP
+    cisco.ios.ios_config:
+      parents: router eigrp asia
+      lines:
+      - address-family ipv4 unicast autonomous-system {{ eigrp_asn }} 
+      - topology base
+      - redistribute bgp {{ eigrp_asn }} metric 100 1 255 1 1500
+      - exit-af-topology
+      - network 0.0.0.0
+      - network {{ tunnel_network }}
+      - eigrp router-id {{ eigrp_router_id }}
+      - exit-address-family
+      - address-family ipv6 unicast autonomous-system {{ eigrp_asn }} 
+      - af-interface {{ af_interface_id }}
+      - passive-interface
+      - exit-af-interface
+      - topology base
+      - exit-af-topology
+      - eigrp router-id {{ eigrp_router_id }}
+      - exit-address-family
+
+- name: Configure BGP on R1
+  hosts: R1
+  tasks:
+  - name: Configure R1 BGP
+    cisco.ios.ios_config:
+      parents: router bgp {{ bgp_asn }}
+      lines:
+      - bgp router-id {{ bgp_router_id }}
+      - bgp log-neighbor-changes
+      - neighbor 2001:DB8:8::7 remote-as 64512
+      - neighbor 2001:DB8:14::1 remote-as 64512
+      - neighbor 192.168.14.1 remote-as 64512
+      - address-family ipv4
+      - network 192.168.1.0
+      - network 192.168.2.0
+      - network 192.168.3.0
+      - network 192.168.4.0
+      - no neighbor 2001:DB8:8::7 activate
+      - no neighbor 2001:DB8:14::1 activate
+      - neighbor 192.168.14.1 activate
+      - redistribute eigrp {{ eigrp_asn }}
+      - exit-address-family
+      - address-family ipv6
+      - network 2001:DB8:14::/66
+      - neighbor 2001:DB8:14::1 activate
+      - exit-address-family
+
+- name: Configure BGP on R2
+  hosts: R2
+  
+  tasks:
+  - name: Configure R2 BGP
+    cisco.ios.ios_config:
+      lines:
+      - router bgp {{ bgp_asn }}
+      - bgp router-id {{ bgp_router_id }}
+      - bgp router-id 6.6.6.7
+      - bgp log-neighbor-changes
+      - neighbor 2001:DB8:8::7 remote-as 64512
+      - neighbor 2001:DB8:14::1 remote-as 64512
+      - neighbor 192.168.8.7 remote-as 64512
+      - neighbor 192.168.14.1 remote-as 64512
+      - address-family ipv4
+      - network 192.168.1.0
+      - network 192.168.2.0
+      - network 192.168.3.0
+      - network 192.168.4.0
+      - no neighbor 2001:DB8:8::7 activate
+      - no neighbor 2001:DB8:14::1 activate
+      - neighbor 192.168.8.7 activate
+      - no neighbor 192.168.14.1 activate
+      - redistribute eigrp 65515
+      - exit-address-family
+      - address-family ipv6
+      - network 2001:DB8:14::/66
+      - neighbor 2001:DB8:8::7 activate
+      - exit-address-family

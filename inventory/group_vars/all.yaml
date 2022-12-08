@@ -1,0 +1,9 @@
+---
+ansible_user: ansible
+ansible_password: test
+ansible_network_os: cisco.ios.ios
+ansible_become: yes
+ansible_become_method: enable
+ansible_become_password: enterprise
+ansible_port: 22
+ansible_connection: ansible.netcommon.network_cli

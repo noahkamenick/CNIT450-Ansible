@@ -1,0 +1,12 @@
+---
+
+- name: Get device facts
+  connection: ansible.netcommon.network_cli
+  gather_facts: true
+  hosts: Routers
+  tasks:
+    
+    - name: Gather all legacy facts
+      cisco.ios.ios_facts:
+        gather_subset: all
+        

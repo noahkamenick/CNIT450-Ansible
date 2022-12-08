@@ -1,0 +1,15 @@
+---
+- name: AUTOMATIC BACKUP OF RUNNING-CONFIG
+  hosts: Routers
+  connection: ansible.netcommon.network_cli
+
+  tasks:
+    - name: DISPLAYING THE RUNNING-CONFIG
+      ios_command:
+        commands:
+          - show running-config
+      register: config
+    - name: SAVE OUTPUT TO ../backups/
+      copy:
+        content: "{{ config.stdout[0] }}"
+        dest: "backups/show_run_{{ inventory_hostname }}.txt"

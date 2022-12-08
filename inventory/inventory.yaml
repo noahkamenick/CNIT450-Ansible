@@ -1,0 +1,23 @@
+Asia_Backup_Pod:
+  children:
+    L3Switches:
+      hosts:
+        S1:
+          ansible-host: 10.10.101.25
+        S2:
+          ansible-host: 10.10.101.26
+    L2Switches:
+      hosts:
+        S3:
+          ansible-host: 10.10.101.27
+    Routers:
+      hosts:
+        R1: 
+          ansible_host: 10.10.101.21
+        R2: 
+          ansible_host: 10.10.101.22
+        R3: 
+          ansible_host: 10.10.101.23
+        R4: 
+          ansible_host: 10.10.101.24
+ 

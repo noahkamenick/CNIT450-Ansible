@@ -1,0 +1,20 @@
+---
+host: AsiaBACKUP_R1
+inside_int: "GigabitEthernet0/1"
+inside_int_desc: "R1 <--> S1"
+inside_int_ipv4_add: "10.22.193.1/30"
+inside_int_ipv6_add: "2001:db8:c193::1/64"
+out_int: "GigabitEthernet0/0"
+out_int_desc: "R1 <--> ISP"
+out_int_ipv4_add: "10.10.101.21/24"
+out_int_ipv6_add: "2001::1/128"
+
+### EIGRP CONFIGS ###
+eigrp_asn: 65515
+eigrp_router_id: 1.1.1.1
+af_interface_id: "GigabitEthernet0/0"
+
+
+### BGP CONFIGS ###
+bgp_asn: 65515
+bgp_router_id: 6.6.6.6

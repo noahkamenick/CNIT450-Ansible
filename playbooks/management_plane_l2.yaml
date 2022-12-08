@@ -1,0 +1,25 @@
+---
+- name: Management Plane Config
+  hosts: Routers
+  connection: ansible.netcommon.network_cli
+
+  tasks:
+  - name: Test reachability
+    cisco.ios.ios_ping:
+      dest: 10.10.101.2
+  
+  - name: Configure the login banner
+    cisco.ios.ios_banner:
+      banner: login
+      text: "Unauthorized access prohibited to {{ host }}"
+      state: present
+
+  - name: Configure ios hostname
+    cisco.ios.ios_hostname:
+      config:
+        hostname: "{{ host }}"
+      state: merged
+
+  - name: Disable DNS lookup
+    cisco.ios.ios_system:
+      lookup_enabled: no
