@@ -1,12 +1,12 @@
 SwitchOver:
   children:
-    L3Switches:
+    L3SwitchesSWOver:
       hosts:
         S1:
           ansible-host: 10.10.101.28
         S2:
           ansible-host: 10.10.101.29
-    L2Switches:
+    L2SwitchesSWOver:
       hosts:
         S3:
           ansible-host: 10.10.101.30
@@ -14,7 +14,7 @@ SwitchOver:
           ansible-host: 10.10.101.31
         S7:
           ansible-host: 10.10.101.36
-    Routers:
+    RoutersSWOver:
       hosts:
         R1: 
           ansible_host: 10.10.101.32
