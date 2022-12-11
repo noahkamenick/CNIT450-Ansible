@@ -1,29 +1,32 @@
 ---
 - name: Production Switchover from EIGRP to OSPFv3
-  hosts: R1:R2
+  hosts: RoutersSWOver
   gather_facts: false
 
   tasks:
+
+  - name: Enable IPv6 unicast routing
+    cisco.ios.ios_config:
+        lines: ipv6 unicast-routing
+
   - name: Create OSPFv3 process
     cisco.ios.ios_ospfv3:
       config:
         processes: 
           - process_id: "{{ ospfv3_pid }}"
-            address-family:
+            address_family:
               - afi: ipv4
                 unicast: true 
-                router_id: "{{ ospf_rid }}"
+                router_id: "{{ ospfv3_rid }}"
               - afi: ipv6
                 unicast: true
-                passive_interface:
-                  - GigabitEthernet0/0
-                router_id: "{{ ospf_rid }}"
+                router_id: "{{ ospfv3_rid }}"
   
   - name: Modify transit interfaces for OSPFv3 IPv4/v6 AFI 
     cisco.ios.ios_ospf_interfaces:
       config:
         - name: "{{ ospfv3_int_in }}"
-          address-family:
+          address_family:
             - afi: ipv4
               process:
                 id: "{{ ospfv3_pid }}"
@@ -33,7 +36,7 @@
                 id: "{{ ospfv3_pid }}"
                 area_id: 0
         - name: "{{ ospfv3_int_out }}"
-          address-family:
+          address_family:
             - afi: ipv4
               process:
                 id: "{{ ospfv3_pid }}"
@@ -42,7 +45,7 @@
               process:
                 id: "{{ ospfv3_pid }}"
                 area_id: 0
-          
+      state: merged    
             
 
                 
