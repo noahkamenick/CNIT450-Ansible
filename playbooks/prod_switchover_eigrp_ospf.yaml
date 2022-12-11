@@ -4,12 +4,45 @@
   gather_facts: false
 
   tasks:
-  - name: Create OSPF process
+  - name: Create OSPFv3 process
     cisco.ios.ios_ospfv3:
       config:
         processes: 
-          - process_id: {{ ospfv3_pid }}
+          - process_id: "{{ ospfv3_pid }}"
             address-family:
               - afi: ipv4
+                unicast: true 
+                router_id: "{{ ospf_rid }}"
+              - afi: ipv6
                 unicast: true
+                passive_interface:
+                  - GigabitEthernet0/0
+                router_id: "{{ ospf_rid }}"
+  
+  - name: Modify transit interfaces for OSPFv3 IPv4/v6 AFI 
+    cisco.ios.ios_ospf_interfaces:
+      config:
+        - name: "{{ ospfv3_int_in }}"
+          address-family:
+            - afi: ipv4
+              process:
+                id: "{{ ospfv3_pid }}"
+                area_id: 0
+            - afi: ipv6
+              process:
+                id: "{{ ospfv3_pid }}"
+                area_id: 0
+        - name: "{{ ospfv3_int_out }}"
+          address-family:
+            - afi: ipv4
+              process:
+                id: "{{ ospfv3_pid }}"
+                area_id: 0
+            - afi: ipv6
+              process:
+                id: "{{ ospfv3_pid }}"
+                area_id: 0
+          
+            
+
                 

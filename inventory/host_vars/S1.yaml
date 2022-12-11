@@ -1,2 +1,8 @@
 ---
 host: AsiaBACKUP_S1
+
+####### SwitchOver S1 ########
+
+ospfv3_int_in: "GigabitEthenet0/1"
+ospfv3_int_out: ""
+ospfv3_rid: 5.5.6.9

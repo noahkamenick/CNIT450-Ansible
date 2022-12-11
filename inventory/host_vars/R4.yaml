@@ -1,2 +1,8 @@
 ---
 host: AsiaBACKUP_R4
+
+####### SwitchOver R4 ########
+
+ospfv3_int_in: "GigabitEthernet0/0"
+ospfv3_int_out: "GigabitEthernet0/1"
+ospfv3_rid: 4.4.6.9

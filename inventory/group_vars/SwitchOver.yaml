@@ -7,3 +7,7 @@ ansible_become_method: enable
 ansible_become_password: enterprise
 ansible_port: 22
 ansible_connection: ansible.netcommon.network_cli
+
+##### SwitchOver #####
+
+ospfv3_pid: 65515
