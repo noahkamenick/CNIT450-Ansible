@@ -1,0 +1,27 @@
+SwitchOver:
+  children:
+    L3Switches:
+      hosts:
+        S1:
+          ansible-host: 10.10.101.28
+        S2:
+          ansible-host: 10.10.101.29
+    L2Switches:
+      hosts:
+        S3:
+          ansible-host: 10.10.101.30
+        S4:
+          ansible-host: 10.10.101.31
+        S7:
+          ansible-host: 10.10.101.36
+    Routers:
+      hosts:
+        R1: 
+          ansible_host: 10.10.101.32
+        R2: 
+          ansible_host: 10.10.101.33
+        R3: 
+          ansible_host: 10.10.101.34
+        R4: 
+          ansible_host: 10.10.101.35
+ 

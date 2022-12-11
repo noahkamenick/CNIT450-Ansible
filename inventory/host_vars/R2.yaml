@@ -19,3 +19,6 @@ af_interface_id: "GigabitEthernet0/0"
 ### BGP CONFIGS ###
 bgp_asn: 65515
 bgp_router_id: 6.6.6.7
+
+####### SwitchOver R2 ########
+
