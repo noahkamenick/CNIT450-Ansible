@@ -1,0 +1,15 @@
+---
+- name: Production Switchover from EIGRP to OSPFv3
+  hosts: R1:R2
+  gather_facts: false
+
+  tasks:
+  - name: Create OSPF process
+    cisco.ios.ios_ospfv3:
+      config:
+        processes: 
+          - process_id: {{ ospfv3_pid }}
+            address-family:
+              - afi: ipv4
+                unicast: true
+                
