@@ -22,3 +22,6 @@ bgp_router_id: 6.6.6.7
 
 ####### SwitchOver R2 ########
 
+ospfv3_int_in: ""
+ospfv3_int_out: "GigabitEthernet0/1"
+ospfv3_rid: 2.2.6.9

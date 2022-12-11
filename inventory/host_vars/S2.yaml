@@ -1,2 +1,8 @@
 ---
 host: AsiaBACKUP_S2
+
+####### SwitchOver S2 ########
+
+ospfv3_int_in: "GigabitEthernet0/1"
+ospfv3_int_out: "GigabitEthernet0/3"
+ospfv3_rid: 6.6.6.9
